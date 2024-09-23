@@ -1,0 +1,4 @@
+## Decode SwapAndBridgeEvent
+```
+cargo run ./
+```
