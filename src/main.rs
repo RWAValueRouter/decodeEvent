@@ -1,3 +1,4 @@
+use base64;
 use std::str;
 use std::convert::TryInto;
 
@@ -58,14 +59,17 @@ impl SwapAndBridgeEvent {
 }
 
 fn main() {
-    // 输入的 hex 数据
-    let hex_data = "10270000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000003d0801a94c4824859add84be2f21305571e5a19287360100000000000000000000000000550000007b2264657374436861696e4e616d65223a224f534d4f534953222c22726563697069656e74223a226f736d6f31383579717232327666716a6774786b61736a6c7a37676673323463377467766a336d64387873227d";
+    // 输入的 base64 编码字符串
+    let base64_data = "4HeX6/luJo8QJwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAD0IAalMSCSFmt2Evi8hMFVx5aGShzYBAAAAAAAAAAAAAAAAAFUAAAB7ImRlc3RDaGFpbk5hbWUiOiJPU01PU0lTIiwicmVjaXBpZW50Ijoib3NtbzE4NXlxcjIydmZxamd0eGthc2psejdnZnMyNGM3dGd2ajNtZDh4cyJ9";
 
-    // 将 hex 转换为字节数组
-    let bytes = hex::decode(hex_data).expect("Decoding failed");
+    // 1. Base64 解码
+    let decoded_bytes = base64::decode(base64_data).expect("Base64 decoding failed");
 
-    // 解析结构体
-    let event = SwapAndBridgeEvent::from_bytes(&bytes);
+    // 2. 去掉前 8 个字节
+    let stripped_bytes = &decoded_bytes[8..];
+
+    // 3. 解析结构体
+    let event = SwapAndBridgeEvent::from_bytes(&stripped_bytes);
 
     // 输出解析后的结果
     println!("{:#?}", event);
